@@ -2,7 +2,7 @@ from django.urls import path
 
 
 from . import views
-
+# defino donde mostrar las vistas
 urlpatterns = [
     # ex: /polls/
     path("", views.index, name="index"),
