@@ -1,16 +1,27 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
 from django.http import HttpResponse
 from .models import Question
+from django.http import Http404
 
 ## defino lo que serían los controladores de la aplicación
 def index(request):
     latest_question_list = Question.objects.order_by("-pub_date")[:5]
-    output = ", ".join([q.question_text for q in latest_question_list])
-    return HttpResponse(output)
+    context = {"latest_question_list": latest_question_list} # le paso como contexto la variable latest_question_list
+    return render(request, "polls/index.html", context) # renderiza la vista index.html con el contexto
 
+# def detail(request, question_id):
+#     try:
+#         question = Question.objects.get(pk=question_id) # obtengo la pregunta con el id pasado por parámetro
+#     except Question.DoesNotExist: # si no existe la pregunta
+#         raise Http404("Question does not exist")   # lanzo un error 404
+#     return render(request, "polls/detail.html", {"question": question}) # renderizo la vista detail.html con el contexto de la pregunta
+
+# Forma simplificada de detail:
 def detail(request, question_id):
-    return HttpResponse("You're looking at question %s." % question_id)
+    # get_object_or_404 es una función que obtiene el objeto o lanza un error 404
+    question = get_object_or_404(Question, pk=question_id) 
+    return render(request, "polls/detail.html", {"question": question})
 
 
 def results(request, question_id):
