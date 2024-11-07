@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from .models import Question
 from django.http import Http404
-
+from django.views import generic
 ## defino lo que serían los controladores de la aplicación
 def index(request):
     latest_question_list = Question.objects.order_by("-pub_date")[:5]
@@ -22,6 +22,12 @@ def detail(request, question_id):
     # get_object_or_404 es una función que obtiene el objeto o lanza un error 404
     question = get_object_or_404(Question, pk=question_id) 
     return render(request, "polls/detail.html", {"question": question})
+
+## Forma de hacerlo con vistas genéricas
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = "polls/detail.html"
+
 
 
 def results(request, question_id):
